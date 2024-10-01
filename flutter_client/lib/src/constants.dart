@@ -1,9 +1,9 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-String host = dotenv.env['HOST']!;
-int port = int.parse(dotenv.env['PORT']!);
+final String host = dotenv.env['HOST']!;
+final int port = int.parse(dotenv.env['PORT']!);
 
-const String packageName = 'com.dandypeople.influencer_map';
+final String packageName = dotenv.env['PACKAGE_NAME']!;
 const String dynamicLinkPrefixUrl = 'https://dandypeople.page.link';
 
 enum Platform {
@@ -48,6 +48,6 @@ Uri inquiryDBUri = Uri(
 
 Map<String, String> inquiryPostHeaders = <String, String>{
   'Authorization': 'Bearer ${dotenv.env['NOTION_API_KEY']}',
-  'Notion-Version': '2022-06-28',
+  'Notion-Version': dotenv.env['NOTION_VERSION']!,
   'Content-Type': 'application/json'
 };

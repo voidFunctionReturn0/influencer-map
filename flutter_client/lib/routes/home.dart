@@ -118,6 +118,7 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
+            // TODO: 장소 상세보기 팝업 표시할 때 에러남
             onTap: () {
               FocusManager.instance.primaryFocus?.unfocus();
               showBottomSheet(
