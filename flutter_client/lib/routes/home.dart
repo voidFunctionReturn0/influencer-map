@@ -182,6 +182,7 @@ class _HomeState extends State<Home> {
             interactionOptions: InteractionOptions(),
             onTap: (_, __) => _popupController.hideAllPopups(),
           ),
+
           // nonRotatedChildren: [
           //   // SearchBar
           //   Positioned(
@@ -332,23 +333,10 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.all(50),
                 markers: markers,
                 polygonOptions: const PolygonOptions(
-                    borderColor: MyColors.primary,
-                    color: Colors.black12,
-                    borderStrokeWidth: 3),
-                popupOptions: PopupOptions(
-                    popupSnap: PopupSnap.markerTop,
-                    popupController: _popupController,
-                    popupBuilder: (_, marker) => Container(
-                          width: 200,
-                          height: 100,
-                          color: Colors.white,
-                          child: GestureDetector(
-                            onTap: () => debugPrint("Popup tap!"),
-                            child: Text(
-                              "Container popup for marker at ${marker.point}",
-                            ),
-                          ),
-                        )),
+                  borderColor: MyColors.primary,
+                  color: Colors.black12,
+                  borderStrokeWidth: 3,
+                ),
                 builder: (context, markers) {
                   return Container(
                     decoration: BoxDecoration(

@@ -44,7 +44,7 @@ class _DataLoadingState extends State<DataLoading> {
     print("## places length: ${places.length}");
     print("## contents length: ${contents.length}");
 
-    await Future.delayed(const Duration(seconds: 1));
+    // await Future.delayed(const Duration(seconds: 1));
 
     if (mounted) {
       Navigator.pushReplacement(
