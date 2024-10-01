@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
@@ -51,12 +52,14 @@ class _HomeState extends State<Home> {
   bool get isShownCurrentLocation => isShownCurrentPosition;
   late AlignOnUpdate followOnLocationUpdate;
   late StreamController<double?> _followCurrentLocationStreamController;
+  late final String openStreetMapUserName;
 
   @override
   void initState() {
     _setMarkers();
     followOnLocationUpdate = AlignOnUpdate.never;
     _followCurrentLocationStreamController = StreamController<double?>();
+    openStreetMapUserName = dotenv.env['OPENSTREETMAP_USERAGENTPACKAGENAME']!;
     super.initState();
   }
 
@@ -169,6 +172,7 @@ class _HomeState extends State<Home> {
     deviceHeight = mediaQuery.size.height;
     statusHeight = mediaQuery.viewPadding.top;
 
+    // TODO: 지도 rotate 안되게 고정하기
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Builder(builder: (context) {
@@ -316,7 +320,7 @@ class _HomeState extends State<Home> {
           children: [
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png?',
-              userAgentPackageName: 'influencer-map',
+              userAgentPackageName: openStreetMapUserName,
               maxZoom: 19,
             ),
             getCurrentLocationLayer(),
