@@ -311,6 +311,7 @@ class _HomeState extends State<Home> {
                 direction: Axis.vertical,
                 spacing: 16,
                 children: [
+                  // TODO: 위치 꺼놓고 클릭 시 Exception 발생함
                   FloatingButton(
                     onTap: () {
                       setSearchResultMarker(null);
@@ -319,6 +320,7 @@ class _HomeState extends State<Home> {
                     iconData: Icons.my_location,
                     shape: constants.ButtonShape.rectangle,
                   ),
+                  // TODO: 이미지 로딩 시 Exception 발생함
                   FloatingButton(
                     onTap: () {
                       Navigator.push(
