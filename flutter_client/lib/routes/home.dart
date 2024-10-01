@@ -172,7 +172,6 @@ class _HomeState extends State<Home> {
     deviceHeight = mediaQuery.size.height;
     statusHeight = mediaQuery.viewPadding.top;
 
-    // TODO: 지도 rotate 안되게 고정하기
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Builder(builder: (context) {
@@ -183,7 +182,9 @@ class _HomeState extends State<Home> {
             initialZoom: constants.mapZoomDefault,
             minZoom: 0,
             maxZoom: 19,
-            interactionOptions: InteractionOptions(),
+            interactionOptions: InteractionOptions(
+              flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+            ),
             onTap: (_, __) => _popupController.hideAllPopups(),
           ),
 
