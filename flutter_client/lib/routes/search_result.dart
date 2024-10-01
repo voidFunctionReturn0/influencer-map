@@ -58,6 +58,7 @@ class _SearchResultState extends State<SearchResult> {
     setState(() {});
   }
 
+  // TODO: TMAP 검색 API 호출 시 Exception 발생하는 문제 해결 필요
   Future<List<TMapPlace>> searchTMapPlace(String searchKeyword) async {
     final response = await http.get(
         Uri(
