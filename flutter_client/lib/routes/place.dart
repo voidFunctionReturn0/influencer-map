@@ -148,6 +148,7 @@ class _PlacePageState extends State<PlacePage> {
                           GestureDetector(
                             onTap: () async {
                               // 카카오톡 공유
+                              // TODO: 공유 버튼 클릭해도 반응 없음
                               bool isKakaoTalkSharingAvailable = await kakao
                                   .ShareClient.instance
                                   .isKakaoTalkSharingAvailable();
