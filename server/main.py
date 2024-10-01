@@ -6,8 +6,15 @@ from models import Content, Influencer, Place
 from typing import List
 import Constants
 import os
-root = os.path.dirname(os.path.abspath(__file__))
+from dotenv import load_dotenv
 
+load_dotenv()
+NOTION_SECRET = os.getenv("NOTION_SECRET")
+NOTION_VERSION = os.getenv("NOTION_VERSION")
+CONTENTS_URL = os.getenv("CONTENTS_URL")
+INFLUENCERS_URL = os.getenv("INFLUENCERS_URL")
+PLACES_URL = os.getenv("PLACES_URL")
+root = os.path.dirname(os.path.abspath(__file__))
 app = FastAPI()
 
 
@@ -30,15 +37,13 @@ async def contents():
     contents: List[Content] = []
 
     headers = {
-        # Notion Api Setting
-        # dotenv 처리 필요
-        'Authorization': 'secret_cusmrLss0KCCYGtfPUue3bUqCApPk26GLQ5NGcZj2Fq',
-        'Notion-Version': '2022-06-28',
+        'Authorization': NOTION_SECRET,
+        'Notion-Version': NOTION_VERSION,
         'Content-Type': 'application/json'
     }
 
     # Load Contents
-    responses = get_notion_data("https://api.notion.com/v1/databases/ed379cac2f7f44ef904692a34f9efe39/query", headers)
+    responses = get_notion_data(CONTENTS_URL, headers)
 
     for response in responses:    
         for content in response['results']:
@@ -62,15 +67,14 @@ async def influencers():
     influencers: List[Influencer] = []
 
     headers = {
-        # Notion Api Setting
-        # dotenv 처리 필요
-        'Authorization': 'secret_cusmrLss0KCCYGtfPUue3bUqCApPk26GLQ5NGcZj2Fq',
-        'Notion-Version': '2022-06-28',
+        'Authorization': NOTION_SECRET,
+        'Notion-Version': NOTION_VERSION,
         'Content-Type': 'application/json'
     }
 
+
     # Load Influencers
-    responses = get_notion_data("https://api.notion.com/v1/databases/21a956c47d594ab8ae31758bf32740a3/query", headers)
+    responses = get_notion_data(INFLUENCERS_URL, headers)
 
     for response in responses:
         for influencer in response['results']:
@@ -92,15 +96,13 @@ async def places():
     places: List[Place] = []
 
     headers = {
-        # Notion Api Setting
-        # dotenv 처리 필요
-        'Authorization': 'secret_cusmrLss0KCCYGtfPUue3bUqCApPk26GLQ5NGcZj2Fq',
-        'Notion-Version': '2022-06-28',
+        'Authorization': NOTION_SECRET,
+        'Notion-Version': NOTION_VERSION,
         'Content-Type': 'application/json'
     }
 
     # Load Places
-    responses = get_notion_data("https://api.notion.com/v1/databases/cab597b093ca47f38d53eb589c193ce8/query", headers)
+    responses = get_notion_data(PLACES_URL, headers)
 
     for response in responses:
         for place in response['results']:
