@@ -121,7 +121,7 @@ class _HomeState extends State<Home> {
             // TODO: 장소 상세보기 팝업 표시할 때 에러남
             onTap: () {
               FocusManager.instance.primaryFocus?.unfocus();
-              showBottomSheet(
+              showModalBottomSheet(
                 context: context,
                 builder: (context) {
                   return PlacePage(
@@ -466,7 +466,7 @@ class _HomeState extends State<Home> {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // 권한 허용 필요하다고 안내하기
+      // TODO: 권한 허용 필요하다고 안내하기
       return Future.error(
           '### Location permissions are permanently denied, we cannot request permissions.');
     }
