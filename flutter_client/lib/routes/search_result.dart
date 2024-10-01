@@ -60,12 +60,6 @@ class _SearchResultState extends State<SearchResult> {
         tMapPlaces = data;
       },
     );
-    // TODO: 장소 검색 결과 클릭 시 Exception 발생
-    // FlutterError (setState() called after dispose(): _SearchResultState#b9b93(lifecycle state: defunct, not mounted)
-    // This error happens if you call setState() on a State object for a widget that no longer appears in the widget tree (e.g., whose parent widget no longer includes the widget in its build). This error can occur when code calls setState() from a timer or an animation callback.
-    // The preferred solution is to cancel the timer or stop listening to the animation in the dispose() callback. Another solution is to check the "mounted" property of this object before calling setState() to ensure the object is still in the tree.
-    // This error might indicate a memory leak if setState() is being called because another object is retaining a reference to this State object after it has been removed from the tree. To avoid memory leaks, consider breaking the reference to this object during dispose().)
-    setState(() {});
   }
 
   Future<List<TMapPlace>> searchTMapPlace(String searchKeyword) async {
