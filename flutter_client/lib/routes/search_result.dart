@@ -223,6 +223,7 @@ class Results extends StatelessWidget {
     required this.contents,
   });
 
+  // TODO: 검색 결과 불러오는 중일 떄 메시지 다르게 표시하기
   @override
   Widget build(BuildContext context) {
     if (tMapPlaces.isEmpty) {

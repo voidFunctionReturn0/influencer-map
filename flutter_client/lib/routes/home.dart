@@ -440,6 +440,7 @@ class _HomeState extends State<Home> {
       zoomLevel: constants.mapZoomForPlace,
     );
 
+    // TODO: '연남동 서대문 양꼬치 상세보기' 안됨
     showBottomSheet(
       context: context,
       builder: (context) {
