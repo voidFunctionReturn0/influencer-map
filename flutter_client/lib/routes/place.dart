@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:influencer_map/models/content.dart';
 import 'package:influencer_map/models/influencer.dart';
 import 'package:influencer_map/models/place.dart';
@@ -8,7 +8,8 @@ import 'package:influencer_map/res/text_styles.dart';
 import 'package:influencer_map/src/common.dart';
 import 'package:intl/intl.dart';
 import 'package:influencer_map/src/constants.dart' as constants;
-import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart' as kakao;
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart'
+    hide Content;
 // import 'package:share_plus/share_plus.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 // import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -148,60 +149,46 @@ class _PlacePageState extends State<PlacePage> {
                           GestureDetector(
                             onTap: () async {
                               // 카카오톡 공유
-                              // TODO: 공유 버튼 클릭해도 반응 없음
-                              bool isKakaoTalkSharingAvailable = await kakao
-                                  .ShareClient.instance
-                                  .isKakaoTalkSharingAvailable();
-
-                              final kakao.LocationTemplate defaultLocation =
-                                  kakao.LocationTemplate(
-                                address: widget.place.address,
-                                content: kakao.Content(
-                                  title: widget.place.name,
-                                  description: widget.content.name,
-                                  imageUrl: Uri.parse(
-                                      constants.youtubeThumbnailUriStart +
-                                          widget.content.videoId +
-                                          constants.youtubeThumbnailUriEnd),
-                                  link: kakao.Link(
-                                    webUrl: Uri.parse(
-                                        'https://matube.notion.site/f55f713b956f4bb89151dadd3256ed74?pvs=4'),
-                                    mobileWebUrl: Uri.parse(
-                                        'https://matube.notion.site/f55f713b956f4bb89151dadd3256ed74?pvs=4'),
-                                  ),
-                                ),
-                              );
-
+                              const templateId = 112831;
+                              bool isKakaoTalkSharingAvailable =
+                                  await ShareClient.instance
+                                      .isKakaoTalkSharingAvailable();
                               if (isKakaoTalkSharingAvailable) {
                                 try {
-                                  Uri uri = await kakao.ShareClient.instance
-                                      .shareDefault(
-                                          template: defaultLocation,
-                                          serverCallbackArgs: {
-                                        'placeId': widget.place.id
-                                      });
-                                  await kakao.ShareClient.instance
+                                  Uri uri =
+                                      await ShareClient.instance.shareCustom(
+                                    templateId: templateId,
+                                    templateArgs: {
+                                      "placeId": widget.place.id,
+                                      "image": Uri.parse(constants
+                                                  .youtubeThumbnailUriStart +
+                                              widget.content.videoId +
+                                              constants.youtubeThumbnailUriEnd)
+                                          .toString(),
+                                      "title": widget.place.name,
+                                      "description": widget.content.name,
+                                    },
+                                  );
+                                  await ShareClient.instance
                                       .launchKakaoTalk(uri);
-                                  if (kDebugMode) {
-                                    print('카카오톡 공유 완료');
-                                  }
                                 } catch (error) {
-                                  if (kDebugMode) {
-                                    print('카카오톡 공유 실패 $error');
-                                  }
+                                  Fluttertoast.showToast(
+                                    msg: "카카오톡 공유 실패 $error",
+                                  );
+                                  print('## error1: $error');
                                 }
                               } else {
                                 try {
-                                  Uri shareUrl = await kakao
-                                      .WebSharerClient.instance
-                                      .makeDefaultUrl(
-                                          template: defaultLocation);
-                                  await kakao.launchBrowserTab(shareUrl,
-                                      popupOpen: true);
+                                  Uri uri = await WebSharerClient.instance
+                                      .makeCustomUrl(
+                                    templateId: templateId,
+                                  );
+                                  await launchBrowserTab(uri, popupOpen: true);
                                 } catch (error) {
-                                  if (kDebugMode) {
-                                    print('카카오톡 공유 실패 $error');
-                                  }
+                                  Fluttertoast.showToast(
+                                    msg: "카카오톡 공유 실패 $error",
+                                  );
+                                  print('## error2: $error');
                                 }
                               }
                             },
