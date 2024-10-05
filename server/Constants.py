@@ -6,4 +6,4 @@ class Platform(Enum):
 
 
 aosMinVersion = '1.1.0'
-iosMinVersion = '1.0.0'
+iosMinVersion = '1.1.0'
