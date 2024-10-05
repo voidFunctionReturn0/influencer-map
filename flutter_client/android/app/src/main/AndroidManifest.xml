@@ -33,6 +33,27 @@
                 <data android:host="kakaolink"
                     android:scheme="kakao7009bde626288391dfc300f678ba5877" />
             </intent-filter>
+
+            <!-- 딥링크 처리 -->
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
+            <!-- App Link sample -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="www.example.com" android:pathPrefix="/foo" />
+            </intent-filter>
+
+            <!-- Deep Link sample -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Add optional android:host to distinguish your app
+                    from others in case of conflicting scheme name -->
+                <data android:scheme="sample" android:host="open.my.app" />
+                <!-- <data android:scheme="sample" /> -->
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

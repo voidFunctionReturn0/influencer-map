@@ -59,6 +59,7 @@ dependencies:
   kakao_flutter_sdk_share: ^1.4.3
   kakao_flutter_sdk_common: ^1.9.6
   fluttertoast: ^8.2.8
+  app_links: ^6.3.2
 
 dev_dependencies:
   flutter_test:

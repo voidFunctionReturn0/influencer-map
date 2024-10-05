@@ -175,7 +175,6 @@ class _PlacePageState extends State<PlacePage> {
                                   Fluttertoast.showToast(
                                     msg: "카카오톡 공유 실패 $error",
                                   );
-                                  print('## error1: $error');
                                 }
                               } else {
                                 try {

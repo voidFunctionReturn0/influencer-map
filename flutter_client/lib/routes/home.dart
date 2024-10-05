@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:influencer_map/models/t_map_place.dart';
 import 'package:influencer_map/models/influencer.dart';
@@ -53,14 +56,17 @@ class _HomeState extends State<Home> {
   late AlignOnUpdate followOnLocationUpdate;
   late StreamController<double?> _followCurrentLocationStreamController;
   late final String openStreetMapUserName;
+  late final AppLinks _appLinks;
 
   @override
   void initState() {
+    _appLinks = AppLinks();
     _setMarkers();
     followOnLocationUpdate = AlignOnUpdate.never;
     _followCurrentLocationStreamController = StreamController<double?>();
     openStreetMapUserName = dotenv.env['OPENSTREETMAP_USERAGENTPACKAGENAME']!;
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _handleDeepLink());
   }
 
   void _setMarkers() {
@@ -426,35 +432,6 @@ class _HomeState extends State<Home> {
     return false;
   }
 
-  void showPlace(Uri deepLink, BuildContext context) {
-    String placeId = getPlaceIdFromPath(deepLink.path);
-    Place place = getPlaceById(placeId, widget.places);
-    List<Content> placeContents = getContentsFromPlace(place, widget.contents)
-      ..sort((a, b) => a.name.compareTo(b.name));
-    Content content = placeContents.first;
-    Influencer influencer =
-        getInfluencerFromContent(content, widget.influencers);
-
-    setHomeMapCenter(
-      downLatNkm(LatLng(place.centerLat, place.centerLon), 0.05),
-      zoomLevel: constants.mapZoomForPlace,
-    );
-
-    // TODO: '연남동 서대문 양꼬치 상세보기' 안됨
-    showBottomSheet(
-      context: context,
-      builder: (context) {
-        return PlacePage(
-          influencers: widget.influencers,
-          influencer: influencer,
-          place: place,
-          content: content,
-          placeContents: placeContents,
-        );
-      },
-    );
-  }
-
   Future<void> moveToCurrentLocation(MapController mapController) async {
     LocationPermission permission;
     bool serviceEnabled;
@@ -517,6 +494,70 @@ class _HomeState extends State<Home> {
       );
     } else {
       return const SizedBox();
+    }
+  }
+
+  void _handleDeepLink() {
+    print("## handle deep link");
+    _handleIncomingLinks();
+    // _handleInitialUri();
+  }
+
+// 앱이 실행 중일 때 들어온 링크 처리
+  void _handleIncomingLinks() {
+    _appLinks.uriLinkStream.listen((Uri? uri) {
+      if (uri != null) {
+        _processUri(uri);
+      }
+    }, onError: (err) {
+      Fluttertoast.showToast(
+        msg: '앱 실행 중 딥링크 열기 오류: $err',
+      );
+    });
+  }
+
+  // 앱이 처음 실행될 때 들어온 링크 처리
+  Future<void> _handleInitialUri() async {
+    try {
+      final initialUri = await _appLinks.getInitialLink();
+      if (initialUri != null) {
+        _processUri(initialUri);
+      }
+    } on PlatformException {
+      Fluttertoast.showToast(
+        msg: 'Failed to receive initial URI.',
+      );
+    }
+  }
+
+  void _processUri(Uri uri) {
+    String? placeId = uri.queryParameters['placeId'];
+
+    if (placeId != null) {
+      Place place = getPlaceById(placeId, widget.places);
+      List<Content> placeContents = getContentsFromPlace(place, widget.contents)
+        ..sort((a, b) => a.name.compareTo(b.name));
+      Content content = placeContents.first;
+      Influencer influencer =
+          getInfluencerFromContent(content, widget.influencers);
+
+      setHomeMapCenter(
+        downLatNkm(LatLng(place.centerLat, place.centerLon), 0.05),
+        zoomLevel: constants.mapZoomForPlace,
+      );
+
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return PlacePage(
+            influencers: widget.influencers,
+            influencer: influencer,
+            place: place,
+            content: content,
+            placeContents: placeContents,
+          );
+        },
+      );
     }
   }
 }
